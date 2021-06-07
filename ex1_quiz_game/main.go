@@ -18,6 +18,7 @@ func partOne(){
 	readCsv("problems.csv")
 }
 
+
 func readCsv(fileName string) ([][]string, error){
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -26,13 +27,11 @@ func readCsv(fileName string) ([][]string, error){
 	defer file.Close()
 
 	reader := csv.NewReader(file)
-	record, err := reader.Read()
+	records, err := reader.ReadAll()
 	if err != nil {
 		return [][]string{}, err
 	}
-	fmt.Println(record)
-	record, err = reader.Read()
-	fmt.Println(record[1])
+	fmt.Println(records)
 
-	return nil, err
+	return records, nil
 }
