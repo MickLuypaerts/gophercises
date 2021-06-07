@@ -4,6 +4,7 @@ import (
 	"os"
 	"encoding/csv"
 	"fmt"
+	"log"
 )
 
 type QuestionAnswer struct {
@@ -15,9 +16,13 @@ func main(){
 }
 
 func partOne(){
-	readCsv("problems.csv")
+	records, err := readCsv("problems.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	questionAnswerSlice := convertRecordsToQAStruct(records)
+	fmt.Println(questionAnswerSlice)
 }
-
 
 func readCsv(fileName string) ([][]string, error){
 	file, err := os.Open(fileName)
@@ -31,7 +36,17 @@ func readCsv(fileName string) ([][]string, error){
 	if err != nil {
 		return [][]string{}, err
 	}
-	fmt.Println(records)
-
 	return records, nil
+}
+
+func convertRecordsToQAStruct(records [][]string) ([]QuestionAnswer) {
+	questionAnswerSlice := make([]QuestionAnswer, len(records))
+	for i, record := range records {
+		questionAnswer := QuestionAnswer{
+			question: record[0],
+			answer: record[1],
+		}
+		questionAnswerSlice[i] = questionAnswer
+	}
+	return questionAnswerSlice
 }
