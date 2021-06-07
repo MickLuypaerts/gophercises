@@ -17,9 +17,15 @@ type UserScore struct {
 	correct int
 	incorrect int
 }
+
+func (u UserScore) Total() int {
+	return u.correct + u.incorrect
+}
+
 func main(){
 	partOne()
 }
+
 
 func partOne(){
 	records, err := readCsv("problems.csv")
@@ -28,7 +34,7 @@ func partOne(){
 	}
 	questionAnswerSlice := convertRecordsToQAStruct(records)
 	userScore := askQuestionsGetAnswers(questionAnswerSlice)
-	fmt.Println(userScore)
+	fmt.Printf("Correct Answers: %d\nTotal number of questions: %d\n", userScore.correct, userScore.Total())
 }
 
 func readCsv(fileName string) ([][]string, error){
