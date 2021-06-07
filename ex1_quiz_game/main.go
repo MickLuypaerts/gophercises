@@ -22,12 +22,7 @@ func (u UserScore) Total() int {
 	return u.correct + u.incorrect
 }
 
-func main(){
-	partOne()
-}
-
-
-func partOne(){
+func main() {
 	records, err := readCsv("problems.csv")
 	if err != nil {
 		log.Fatal(err)
@@ -37,7 +32,7 @@ func partOne(){
 	fmt.Printf("Correct Answers: %d\nTotal number of questions: %d\n", userScore.correct, userScore.Total())
 }
 
-func readCsv(fileName string) ([][]string, error){
+func readCsv(fileName string) ([][]string, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
 		return [][]string{}, err
