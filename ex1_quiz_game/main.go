@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 )
 
 type QuestionAnswer struct {
@@ -28,8 +29,23 @@ func main() {
 		log.Fatal(err)
 	}
 	questionAnswerSlice := convertRecordsToQAStruct(records)
-	userScore := askQuestionsGetAnswers(questionAnswerSlice)
+	var userScore UserScore
+	startTimer(5, &userScore)
+	userScore = askQuestionsGetAnswers(questionAnswerSlice)
 	fmt.Printf("Correct Answers: %d\nTotal number of questions: %d\n", userScore.correct, userScore.Total())
+}
+
+func startTimer(timeForQuiz int, userScore *UserScore) {
+	fmt.Printf("Press enter to start the quiz you will have %d seconds to complete it", timeForQuiz)
+	fmt.Scanln()
+	go timer(timeForQuiz, userScore)
+}
+
+func timer(timeForQuiz int, userScore *UserScore) {
+	timer := time.NewTimer(time.Duration(timeForQuiz) * time.Second)
+	<-timer.C
+	fmt.Printf("Time ran out.\nCorrect Answers: %d\nTotal number of questions: %d\n", userScore.correct, userScore.Total())
+	os.Exit(0)
 }
 
 func readCsv(fileName string) ([][]string, error) {
