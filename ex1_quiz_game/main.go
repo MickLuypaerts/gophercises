@@ -7,6 +7,7 @@ import (
 	"log"
 	"strconv"
 	"time"
+	"flag"
 )
 
 type QuestionAnswer struct {
@@ -24,13 +25,15 @@ func (u UserScore) Total() int {
 }
 
 func main() {
+	timeFlag := flag.Int("time", 30, "Time to complete the quiz.")
+	flag.Parse()
 	records, err := readCsv("problems.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
 	questionAnswerSlice := convertRecordsToQAStruct(records)
 	var userScore UserScore
-	startTimer(5, &userScore)
+	startTimer(*timeFlag, &userScore)
 	userScore = askQuestionsGetAnswers(questionAnswerSlice)
 	fmt.Printf("Correct Answers: %d\nTotal number of questions: %d\n", userScore.correct, userScore.Total())
 }
