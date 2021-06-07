@@ -5,11 +5,17 @@ import (
 	"encoding/csv"
 	"fmt"
 	"log"
+	"strconv"
 )
 
 type QuestionAnswer struct {
 	question string
 	answer string
+}
+
+type UserScore struct {
+	correct int
+	incorrect int
 }
 func main(){
 	partOne()
@@ -21,7 +27,8 @@ func partOne(){
 		log.Fatal(err)
 	}
 	questionAnswerSlice := convertRecordsToQAStruct(records)
-	fmt.Println(questionAnswerSlice)
+	userScore := askQuestionsGetAnswers(questionAnswerSlice)
+	fmt.Println(userScore)
 }
 
 func readCsv(fileName string) ([][]string, error){
@@ -49,4 +56,20 @@ func convertRecordsToQAStruct(records [][]string) ([]QuestionAnswer) {
 		questionAnswerSlice[i] = questionAnswer
 	}
 	return questionAnswerSlice
+}
+
+func askQuestionsGetAnswers(questionAnswerSlice []QuestionAnswer) UserScore {
+	var userScore UserScore
+	for _, questionAnswer := range questionAnswerSlice {
+		var userInput int
+		fmt.Printf("%s = ", questionAnswer.question)
+		fmt.Scan(&userInput)
+
+		if answer, _ := strconv.Atoi(questionAnswer.answer); answer == userInput {
+			userScore.correct++
+		} else {
+			userScore.incorrect++
+		}
+	}
+	return userScore
 }
