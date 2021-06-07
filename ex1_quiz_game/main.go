@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 	"flag"
+	"math/rand"
 )
 
 type QuestionAnswer struct {
@@ -24,14 +25,25 @@ func (u UserScore) Total() int {
 	return u.correct + u.incorrect
 }
 
+
 func main() {
+
 	timeFlag := flag.Int("time", 30, "Time to complete the quiz.")
+	shuffleFlag := flag.Bool("shuffle", false, "Should the quiz be shuffeld.")
 	flag.Parse()
+
 	records, err := readCsv("problems.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	questionAnswerSlice := convertRecordsToQAStruct(records)
+
+	if *shuffleFlag {
+		rand.Seed(time.Now().UnixNano())
+		rand.Shuffle(len(questionAnswerSlice), func(i, j int) {questionAnswerSlice[i], questionAnswerSlice[j] = questionAnswerSlice[j], questionAnswerSlice[i] })
+	}
+
 	var userScore UserScore
 	startTimer(*timeFlag, &userScore)
 	userScore = askQuestionsGetAnswers(questionAnswerSlice)
