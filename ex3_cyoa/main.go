@@ -17,6 +17,11 @@ var storyTmpl = `
 <head>
     <title>Choose your own adventure</title>
 </head>
+<style>
+	h1 {
+		background-color: coral;
+	}
+</style>
 <body>
     <h1>{{.Title}}</h1>
     {{range .Story}}
@@ -39,7 +44,7 @@ type Option struct {
 type StoryArc struct {
 	Title   string   `json:"title"`
 	Story   []string `json:"story"`
-	Options []Option //`json:"options"`
+	Options []Option `json:"options"`
 }
 
 type handler struct {
@@ -47,6 +52,7 @@ type handler struct {
 }
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
 	tmp := template.Must(template.New("").Parse(storyTmpl))
 
 	path := r.URL.Path
