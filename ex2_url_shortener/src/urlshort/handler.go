@@ -10,13 +10,18 @@ import (
 // that each key in the map points to, in string format).
 // If the path is not provided in the map, then the fallback
 // http.Handler will be called instead.
-func MapHandler(fallback http.Handler) http.HandlerFunc {
-	//	TODO: Implement this...
+func MapHandler(pathsToUrls map[string] string, fallback http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		
-		//http.Redirect(w, r, url, http.StatusSeeOther)
-		//func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request)
-		fallback.ServeHTTP(w, r)
+		path := r.URL.Path
+		url, found := pathsToUrls[path]
+		if found {
+			//http.Redirect(w, r, url, StatusCode)
+			// TODO: Lookup status codes
+			http.Redirect(w, r, url, http.StatusSeeOther)
+		} else {
+			//func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request)
+			fallback.ServeHTTP(w, r)
+		}	
 	}
 }
 
