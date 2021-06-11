@@ -14,8 +14,8 @@ type Option struct {
 }
 
 type StoryArc struct {
-	Title   string `json:"title"`
-	Story   string `json:"story"`
+	Title   string   `json:"title"`
+	Story   []string `json:"story"`
 	Options []Option
 }
 
