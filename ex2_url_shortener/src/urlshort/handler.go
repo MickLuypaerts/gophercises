@@ -10,7 +10,7 @@ import (
 // that each key in the map points to, in string format).
 // If the path is not provided in the map, then the fallback
 // http.Handler will be called instead.
-func MapHandler(pathsToUrls map[string] string, fallback http.Handler) http.HandlerFunc {
+func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
 		url, found := pathsToUrls[path]
@@ -21,10 +21,9 @@ func MapHandler(pathsToUrls map[string] string, fallback http.Handler) http.Hand
 		} else {
 			//func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request)
 			fallback.ServeHTTP(w, r)
-		}	
+		}
 	}
 }
-
 
 // YAMLHandler will parse the provided YAML and then return
 // an http.HandlerFunc (which also implements http.Handler)
@@ -42,10 +41,10 @@ func MapHandler(pathsToUrls map[string] string, fallback http.Handler) http.Hand
 //
 // See MapHandler to create a similar http.HandlerFunc via
 // a mapping of paths to urls.
+
 func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
 	// TODO: Implement this...
-	return func (w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		fallback.ServeHTTP(w, r)
 	}, nil
 }
-

@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"log"
+	"net/http"
 
 	"github.com/MickLuypaerts/gophercises/tree/master/ex2_url_shortener/src/urlshort"
-
 )
 
 func main() {
