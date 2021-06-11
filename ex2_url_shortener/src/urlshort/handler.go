@@ -44,6 +44,8 @@ func MapHandler(pathsToUrls map[string] string, fallback http.Handler) http.Hand
 // a mapping of paths to urls.
 func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
 	// TODO: Implement this...
-	return nil, nil
+	return func (w http.ResponseWriter, r *http.Request) {
+		fallback.ServeHTTP(w, r)
+	}, nil
 }
 
