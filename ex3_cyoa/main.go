@@ -3,10 +3,33 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
+	"strings"
 )
+
+var storyTmpl = `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Choose your own adventure</title>
+</head>
+<body>
+    <h1>{{.Title}}</h1>
+    {{range .Story}}
+    <p>{{.}}</p>
+    {{end}}
+
+    <ul>
+        {{range .Options}}
+        <li><a href="/{{.Arc}}">{{.Text}}</a></li>
+        {{end}}
+    </ul>
+</body>
+</html>`
 
 type Option struct {
 	Text string `json:"text"`
@@ -19,13 +42,38 @@ type StoryArc struct {
 	Options []Option //`json:"options"`
 }
 
+type handler struct {
+	story map[string]StoryArc
+}
+
+func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	tmp := template.Must(template.New("").Parse(storyTmpl))
+
+	path := r.URL.Path
+
+	if path == "" || path == "/" {
+		err := tmp.Execute(w, h.story["intro"])
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		fmt.Println(strings.Trim(path, "/"))
+		err := tmp.Execute(w, h.story[strings.Trim(path, "/")])
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+}
+
 func main() {
 
 	parsedJSON, err := parseJSON("gopher.json")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(parsedJSON["intro"].Options)
+	fmt.Println("Starting the server on :8080")
+	log.Fatal(http.ListenAndServe(":8080", MyHandler(parsedJSON)))
 
 }
 
@@ -55,4 +103,8 @@ func parseJSON(file string) (map[string]StoryArc, error) {
 	}
 
 	return storyMap, nil
+}
+
+func MyHandler(s map[string]StoryArc) http.Handler {
+	return handler{s}
 }
