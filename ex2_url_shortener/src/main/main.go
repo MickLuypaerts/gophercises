@@ -18,10 +18,6 @@ func main() {
 		"/yaml-godoc":     "https://godoc.org/gopkg.in/yaml.v2",
 	}
 
-	test , err := pathsToUrls["/urlshort-godoc"]
-	fmt.Println(test)
-	fmt.Println(err)
-
 	mapHandler := urlshort.MapHandler(pathsToUrls, mux)
 /*
 	// Build the YAMLHandler using the mapHandler as the
